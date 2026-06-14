@@ -14,9 +14,34 @@ document.getElementById("profileName").innerHTML =
 
 }
 
+let joinedSlots =
+localStorage.getItem("slots") || 0;
+
+document.getElementById("slots").innerHTML =
+"Slots: " + joinedSlots + "/50";
+
 function joinTournament(){
 
-alert("Tournament Joined Successfully 🔥");
+if(joinedSlots >= 50){
+
+alert("Tournament Full ❌");
+return;
+
+}
+
+joinedSlots++;
+
+localStorage.setItem(
+"slots",
+joinedSlots
+);
+
+document.getElementById("slots").innerHTML =
+"Slots: " + joinedSlots + "/50";
+
+alert(
+"Tournament Joined Successfully 🔥"
+);
 
 }
 
