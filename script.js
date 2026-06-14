@@ -90,3 +90,19 @@ document.getElementById("savedUID").innerHTML =
 "Saved UID: " + savedUID;
 
   }
+
+function copyRoomId(){
+
+navigator.clipboard.writeText("12345678");
+
+alert("Room ID Copied ✅");
+
+}
+
+function copyRoomPass(){
+
+navigator.clipboard.writeText("FLOW123");
+
+alert("Password Copied ✅");
+
+}
