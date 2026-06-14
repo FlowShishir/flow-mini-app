@@ -59,7 +59,10 @@ document.getElementById("walletPage").classList.remove("hidden");
 
 if(page==="profile")
 document.getElementById("profilePage").classList.remove("hidden");
+document.getElementById("roomPage").classList.add("hidden");
 
+if(page==="room")
+document.getElementById("roomPage").classList.remove("hidden");
 }
 
 // UID Save System
