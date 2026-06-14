@@ -1,39 +1,53 @@
-const tg = window.Telegram.WebApp;
-
-tg.expand();
-
-let user =
-tg.initDataUnsafe.user;
-
-if(user){
-
-document.getElementById("username").innerHTML =
-"@" + (user.username || user.first_name);
-
-document.getElementById("profileName").innerHTML =
-"Name: " + user.first_name;
-
+body{
+background:#0d1117;
+color:white;
+font-family:Arial;
+margin:0;
+padding-bottom:80px;
 }
 
-function joinTournament(){
-
-alert("Tournament Joined Successfully 🔥");
-
+.header{
+text-align:center;
+padding:20px;
+background:#161b22;
 }
 
-function showPage(page){
+.card{
+background:#161b22;
+margin:15px;
+padding:15px;
+border-radius:15px;
+}
 
-document.getElementById("homePage").classList.add("hidden");
-document.getElementById("walletPage").classList.add("hidden");
-document.getElementById("profilePage").classList.add("hidden");
+.tournament{
+background:#161b22;
+margin:15px;
+padding:15px;
+border-radius:15px;
+}
 
-if(page==="home")
-document.getElementById("homePage").classList.remove("hidden");
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+font-size:16px;
+}
 
-if(page==="wallet")
-document.getElementById("walletPage").classList.remove("hidden");
+.bottom-nav{
+position:fixed;
+bottom:0;
+width:100%;
+display:flex;
+justify-content:space-around;
+background:#161b22;
+padding:10px;
+}
 
-if(page==="profile")
-document.getElementById("profilePage").classList.remove("hidden");
+.bottom-nav button{
+width:30%;
+}
 
-  }
+.hidden{
+display:none;
+}
