@@ -1,24 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>FLOW Mini App</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLOW Tournament</title>
+
+<link rel="stylesheet" href="style.css">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
+
 <body>
 
-  <div class="container">
-    <h1>🔥 FLOW MINI APP 🔥</h1>
-    <p>Welcome Shishir 😎</p>
+<div class="header">
+    <h2>🔥 FLOW TOURNAMENT</h2>
+    <p id="username">Loading...</p>
+</div>
 
-    <button onclick="showMessage()">
-      Click Me
-    </button>
+<div id="homePage">
 
-    <p id="result"></p>
-  </div>
+    <div class="card">
+        <h3>💰 Wallet</h3>
+        <h2>৳ 0</h2>
+    </div>
 
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="script.js"></script>
+    <h3>🏆 Live Tournaments</h3>
+
+    <div class="tournament">
+        <h3>FREE FIRE SOLO</h3>
+        <p>Entry Fee: ৳10</p>
+        <p>Prize Pool: ৳100</p>
+        <button onclick="joinTournament()">
+            Join Tournament
+        </button>
+    </div>
+
+    <div class="tournament">
+        <h3>FREE FIRE SQUAD</h3>
+        <p>Entry Fee: ৳50</p>
+        <p>Prize Pool: ৳500</p>
+        <button onclick="joinTournament()">
+            Join Tournament
+        </button>
+    </div>
+
+</div>
+
+<div id="walletPage" class="hidden">
+    <h2>💰 Wallet</h2>
+    <p>Balance: ৳0</p>
+</div>
+
+<div id="profilePage" class="hidden">
+    <h2>👤 Profile</h2>
+    <p id="profileName"></p>
+</div>
+
+<div class="bottom-nav">
+    <button onclick="showPage('home')">🏠</button>
+    <button onclick="showPage('wallet')">💰</button>
+    <button onclick="showPage('profile')">👤</button>
+</div>
+
+<script src="script.js"></script>
 
 </body>
-</html>
+      </html>
