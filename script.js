@@ -2,8 +2,7 @@ const tg = window.Telegram.WebApp;
 
 tg.expand();
 
-let user =
-tg.initDataUnsafe.user;
+let user = tg.initDataUnsafe.user;
 
 if(user){
 
@@ -37,3 +36,29 @@ if(page==="profile")
 document.getElementById("profilePage").classList.remove("hidden");
 
 }
+
+// UID Save System
+
+function saveUID(){
+
+let uid =
+document.getElementById("uidInput").value;
+
+localStorage.setItem("ff_uid", uid);
+
+document.getElementById("savedUID").innerHTML =
+"Saved UID: " + uid;
+
+alert("UID Saved ✅");
+
+}
+
+let savedUID =
+localStorage.getItem("ff_uid");
+
+if(savedUID){
+
+document.getElementById("savedUID").innerHTML =
+"Saved UID: " + savedUID;
+
+  }
