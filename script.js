@@ -1,7 +1,39 @@
-let tg = window.Telegram.WebApp;
+const tg = window.Telegram.WebApp;
+
 tg.expand();
 
-function showMessage(){
-  document.getElementById("result").innerHTML =
-  "🚀 FLOW Mini App Working!";
+let user =
+tg.initDataUnsafe.user;
+
+if(user){
+
+document.getElementById("username").innerHTML =
+"@" + (user.username || user.first_name);
+
+document.getElementById("profileName").innerHTML =
+"Name: " + user.first_name;
+
+}
+
+function joinTournament(){
+
+alert("Tournament Joined Successfully 🔥");
+
+}
+
+function showPage(page){
+
+document.getElementById("homePage").classList.add("hidden");
+document.getElementById("walletPage").classList.add("hidden");
+document.getElementById("profilePage").classList.add("hidden");
+
+if(page==="home")
+document.getElementById("homePage").classList.remove("hidden");
+
+if(page==="wallet")
+document.getElementById("walletPage").classList.remove("hidden");
+
+if(page==="profile")
+document.getElementById("profilePage").classList.remove("hidden");
+
 }
