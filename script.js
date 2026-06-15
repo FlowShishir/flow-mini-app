@@ -39,9 +39,22 @@ joinedSlots
 document.getElementById("slots").innerHTML =
 "Slots: " + joinedSlots + "/50";
 
+function joinTournament(){
+
+let confirmJoin =
+confirm(
+"Join FF Solo Tournament?\n\nEntry Fee: ৳10"
+);
+
+if(!confirmJoin){
+return;
+}
+
 alert(
 "Tournament Joined Successfully 🔥"
 );
+
+}
 
 }
 
