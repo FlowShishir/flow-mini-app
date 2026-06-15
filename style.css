@@ -65,3 +65,29 @@ font-size:16px;
 margin-top:15px;
 font-weight:bold;
 }
+
+.tournament{
+background:#111827;
+padding:15px;
+margin:15px 0;
+border-radius:15px;
+border:1px solid #333;
+}
+
+.tournament h3{
+margin-bottom:10px;
+}
+
+.tournament p{
+margin:5px 0;
+}
+
+.tournament button{
+width:100%;
+margin-top:10px;
+padding:12px;
+border:none;
+border-radius:10px;
+font-size:16px;
+font-weight:bold;
+}
