@@ -63,6 +63,7 @@ function showPage(page){
 document.getElementById("homePage").classList.add("hidden");
 document.getElementById("walletPage").classList.add("hidden");
 document.getElementById("profilePage").classList.add("hidden");
+document.getElementById("matchesPage").classList.add("hidden");
 
 if(page==="home")
 document.getElementById("homePage").classList.remove("hidden");
@@ -76,6 +77,9 @@ document.getElementById("roomPage").classList.add("hidden");
 
 if(page==="room")
 document.getElementById("roomPage").classList.remove("hidden");
+
+if(page==="matches")
+document.getElementById("matchesPage").classList.remove("hidden");
 }
 
 // UID Save System
