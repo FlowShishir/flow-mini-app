@@ -119,3 +119,18 @@ transition:0.3s;
 color:#aaa;
 font-size:14px;
 }
+
+.categories{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-bottom:15px;
+}
+
+.categories button{
+padding:15px;
+border:none;
+border-radius:12px;
+font-weight:bold;
+font-size:15px;
+}
