@@ -123,8 +123,8 @@ font-size:14px;
 .categories{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:10px;
-margin-bottom:15px;
+gap:12px;
+margin:15px 0;
 }
 
 .categories button{
