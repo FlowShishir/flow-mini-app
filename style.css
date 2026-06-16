@@ -134,3 +134,33 @@ border-radius:12px;
 font-weight:bold;
 font-size:15px;
 }
+
+.categories{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin:15px 0;
+}
+
+.category-card{
+background:#1a1a1a;
+border-radius:15px;
+overflow:hidden;
+text-align:center;
+}
+
+.category-card img{
+width:100%;
+display:block;
+}
+
+.category-card h3{
+margin:10px 0 5px;
+font-size:16px;
+}
+
+.category-card p{
+margin-bottom:10px;
+color:#aaa;
+font-size:13px;
+}
