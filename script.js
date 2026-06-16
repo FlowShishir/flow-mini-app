@@ -16,7 +16,31 @@ document.getElementById("profileName").innerHTML =
 
 // Page Navigation
 
-function showPage(page){
+function showPage(page) {
+
+document.getElementById("homePage").classList.add("hidden");
+document.getElementById("walletPage").classList.add("hidden");
+document.getElementById("profilePage").classList.add("hidden");
+document.getElementById("roomPage").classList.add("hidden");
+document.getElementById("matchesPage").classList.add("hidden");
+
+document.getElementById("brPage").classList.add("hidden");
+document.getElementById("csPage").classList.add("hidden");
+document.getElementById("lwPage").classList.add("hidden");
+document.getElementById("otherPage").classList.add("hidden");
+
+if(page === "home") document.getElementById("homePage").classList.remove("hidden");
+if(page === "wallet") document.getElementById("walletPage").classList.remove("hidden");
+if(page === "profile") document.getElementById("profilePage").classList.remove("hidden");
+if(page === "room") document.getElementById("roomPage").classList.remove("hidden");
+if(page === "matches") document.getElementById("matchesPage").classList.remove("hidden");
+
+if(page === "br") document.getElementById("brPage").classList.remove("hidden");
+if(page === "cs") document.getElementById("csPage").classList.remove("hidden");
+if(page === "lw") document.getElementById("lwPage").classList.remove("hidden");
+if(page === "other") document.getElementById("otherPage").classList.remove("hidden");
+
+}
 
 document.getElementById("homePage").classList.add("hidden");
 document.getElementById("walletPage").classList.add("hidden");
@@ -42,7 +66,6 @@ document.getElementById("roomPage").classList.remove("hidden");
 
 if(page==="matches"){
 document.getElementById("matchesPage").classList.remove("hidden");
-}
 
 }
 
