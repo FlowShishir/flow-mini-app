@@ -18,7 +18,9 @@ const typingText =
     document.getElementById("typingText");
 
 const typingCursor =
-    document.querySelector(".typing-cursor");
+    document.querySelector(
+        ".typing-cursor"
+    );
 
 
 /* ==========================================
@@ -33,49 +35,56 @@ const message =
    OPEN GIFT BUTTON
 ========================================== */
 
-openGift.addEventListener("click", () => {
+openGift.addEventListener(
+    "click",
+    () => {
 
-    /* Button press effect */
+        /* Button press effect */
 
-    openGift.style.transform =
-        "scale(0.94)";
-
-
-    setTimeout(() => {
-
-        openGift.style.transform = "";
-
-    }, 150);
+        openGift.style.transform =
+            "scale(0.94)";
 
 
-    /* Landing screen fade out */
+        setTimeout(() => {
 
-    landingScreen.style.opacity = "0";
+            openGift.style.transform =
+                "";
 
-    landingScreen.style.transform =
-        "scale(0.96)";
-
-
-    /* Wait for transition */
-
-    setTimeout(() => {
-
-        landingScreen.style.display =
-            "none";
+        }, 150);
 
 
-        /* Show Letter Screen */
+        /* Landing screen fade out */
 
-        letterScreen.classList.add("active");
+        landingScreen.style.opacity =
+            "0";
+
+        landingScreen.style.transform =
+            "scale(0.96)";
 
 
-        /* Start typing */
+        /* Wait for transition */
 
-        startTyping();
+        setTimeout(() => {
 
-    }, 700);
+            landingScreen.style.display =
+                "none";
 
-});
+
+            /* Show Letter Screen */
+
+            letterScreen.classList.add(
+                "active"
+            );
+
+
+            /* Start typing */
+
+            startTyping();
+
+        }, 700);
+
+    }
+);
 
 
 /* ==========================================
@@ -86,7 +95,8 @@ function startTyping() {
 
     typingText.textContent = "";
 
-    typingCursor.style.opacity = "1";
+    typingCursor.style.opacity =
+        "1";
 
     let index = 0;
 
@@ -95,12 +105,15 @@ function startTyping() {
 
     function typeCharacter() {
 
-        if (index < message.length) {
+        if (
+            index < message.length
+        ) {
 
             typingText.textContent +=
                 message.charAt(index);
 
             index++;
+
 
             setTimeout(
                 typeCharacter,
@@ -132,19 +145,29 @@ function startTyping() {
    ENVELOPE OPEN
 ========================================== */
 
-envelope.addEventListener("click", () => {
+envelope.addEventListener(
+    "click",
+    () => {
 
-    /* Prevent opening again */
+        /*
+           যদি আগে থেকেই খোলা থাকে,
+           তাহলে আবার animation হবে না।
+        */
 
-    if (
-        envelope.classList.contains("opened")
-    ) {
-        return;
+        if (
+            envelope.classList.contains(
+                "opened"
+            )
+        ) {
+            return;
+        }
+
+
+        /* Open envelope */
+
+        envelope.classList.add(
+            "opened"
+        );
+
     }
-
-
-    /* Open envelope */
-
-    envelope.classList.add("opened");
-
-});
+);
