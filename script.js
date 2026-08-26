@@ -18,9 +18,7 @@ const typingText =
     document.getElementById("typingText");
 
 const typingCursor =
-    document.querySelector(
-        ".typing-cursor"
-    );
+    document.querySelector(".typing-cursor");
 
 
 /* ==========================================
@@ -28,63 +26,50 @@ const typingCursor =
 ========================================== */
 
 const message =
-    "তোমার জন্য একটা ছোট্ট চিঠি... ❤️";
+    "তোমাকে একটা ছোট্ট কথা বলার ছিল... তুমি আমার জীবনের খুব সুন্দর একটা অংশ।";
 
 
 /* ==========================================
-   OPEN GIFT BUTTON
+   OPEN GIFT
 ========================================== */
 
-openGift.addEventListener(
-    "click",
-    () => {
+openGift.addEventListener("click", () => {
 
-        /* Button press effect */
+    openGift.style.transform =
+        "scale(0.94)";
+
+
+    setTimeout(() => {
 
         openGift.style.transform =
-            "scale(0.94)";
+            "";
+
+    }, 150);
 
 
-        setTimeout(() => {
+    landingScreen.style.opacity =
+        "0";
 
-            openGift.style.transform =
-                "";
-
-        }, 150);
-
-
-        /* Landing screen fade out */
-
-        landingScreen.style.opacity =
-            "0";
-
-        landingScreen.style.transform =
-            "scale(0.96)";
+    landingScreen.style.transform =
+        "scale(0.96)";
 
 
-        /* Wait for transition */
+    setTimeout(() => {
 
-        setTimeout(() => {
-
-            landingScreen.style.display =
-                "none";
+        landingScreen.style.display =
+            "none";
 
 
-            /* Show Letter Screen */
-
-            letterScreen.classList.add(
-                "active"
-            );
+        letterScreen.classList.add(
+            "active"
+        );
 
 
-            /* Start typing */
+        startTyping();
 
-            startTyping();
+    }, 700);
 
-        }, 700);
-
-    }
-);
+});
 
 
 /* ==========================================
@@ -93,20 +78,24 @@ openGift.addEventListener(
 
 function startTyping() {
 
-    typingText.textContent = "";
+    typingText.textContent =
+        "";
 
     typingCursor.style.opacity =
         "1";
 
+
     let index = 0;
 
-    const typingSpeed = 80;
+    const typingSpeed =
+        65;
 
 
     function typeCharacter() {
 
         if (
-            index < message.length
+            index <
+            message.length
         ) {
 
             typingText.textContent +=
@@ -120,9 +109,9 @@ function startTyping() {
                 typingSpeed
             );
 
-        } else {
+        }
 
-            /* Typing finished */
+        else {
 
             setTimeout(() => {
 
@@ -149,11 +138,6 @@ envelope.addEventListener(
     "click",
     () => {
 
-        /*
-           যদি আগে থেকেই খোলা থাকে,
-           তাহলে আবার animation হবে না।
-        */
-
         if (
             envelope.classList.contains(
                 "opened"
@@ -163,11 +147,34 @@ envelope.addEventListener(
         }
 
 
-        /* Open envelope */
-
         envelope.classList.add(
             "opened"
         );
+
+
+        /*
+         * Envelope খোলার পর
+         * paper-এর ভিতরে scroll
+         * automatically possible হবে।
+         */
+
+
+        setTimeout(() => {
+
+            const paper =
+                document.querySelector(
+                    ".paper-content"
+                );
+
+
+            if (paper) {
+
+                paper.scrollTop =
+                    0;
+
+            }
+
+        }, 1000);
 
     }
 );
