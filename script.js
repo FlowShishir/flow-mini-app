@@ -8,19 +8,9 @@
    CONFIGURATION
    ========================================================= */
 
+
 /*
-  এখানে তোর আসল ছবি / ভিডিওর নাম বসাবি।
-
-  উদাহরণ:
-
-  assets/images/her-01.jpg
-  assets/images/her-02.jpg
-
-  একইভাবে video:
-  assets/videos/her-01.mp4
-
-  special video:
-  assets/videos/special.mp4
+  HER PHOTOS
 */
 
 const HER_PHOTOS = [
@@ -31,6 +21,10 @@ const HER_PHOTOS = [
 ];
 
 
+/*
+  MY PHOTOS
+*/
+
 const MY_PHOTOS = [
   "assets/images/my-01.jpg",
   "assets/images/my-02.jpg",
@@ -39,13 +33,20 @@ const MY_PHOTOS = [
 ];
 
 
+/*
+  COUPLE PHOTOS
+
+  এখানে এখন শুধু ১টা ছবি থাকবে।
+*/
+
 const COUPLE_PHOTOS = [
-  "assets/images/couple-01.jpg",
-  "assets/images/couple-02.jpg",
-  "assets/images/couple-03.jpg",
-  "assets/images/couple-04.jpg"
+  "assets/images/couple-01.jpg"
 ];
 
+
+/*
+  GIRL VIDEOS
+*/
 
 const GIRL_VIDEOS = [
   "assets/videos/her-01.mp4",
@@ -54,6 +55,10 @@ const GIRL_VIDEOS = [
 ];
 
 
+/*
+  SPECIAL VIDEO
+*/
+
 const SPECIAL_VIDEO =
   "assets/videos/special.mp4";
 
@@ -61,6 +66,7 @@ const SPECIAL_VIDEO =
 /*
   Background floating symbols.
 */
+
 const PARTICLE_SYMBOLS = [
   "♡",
   "♥",
@@ -148,45 +154,43 @@ const LETTER_TYPING_TEXT =
 
 let giftOpened = false;
 
-goButton.addEventListener("click", () => {
+if (goButton){
 
-  if (giftOpened) return;
+  goButton.addEventListener("click", () => {
 
-  giftOpened = true;
+    if (giftOpened) return;
 
-  openScreen.style.display = "none";
+    giftOpened = true;
 
-  exp.classList.add("show");
+    openScreen.style.display = "none";
 
-  startTyping();
+    exp.classList.add("show");
 
-  createBackgroundEffects();
+    startTyping();
 
-  /*
-    Gift open করার পর কিছুক্ষণ পরে
-    surprise section দেখা যাবে।
-  */
-  setTimeout(() => {
-
-    surprise.classList.add("show");
-
-  }, 2200);
+    createBackgroundEffects();
 
 
-  /*
-    নিচের sections-এর শুরুতে scroll.
-  */
-  setTimeout(() => {
+    setTimeout(() => {
 
-    document.querySelector("#exp section")
-      ?.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
+      surprise.classList.add("show");
 
-  }, 300);
+    }, 2200);
 
-});
+
+    setTimeout(() => {
+
+      document.querySelector("#exp section")
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+
+    }, 300);
+
+  });
+
+}
 
 
 /* =========================================================
@@ -215,9 +219,11 @@ function startTyping(){
     index++;
 
     setTimeout(type, speed);
+
   }
 
   type();
+
 }
 
 
@@ -227,7 +233,7 @@ function startTyping(){
 
 let envelopeOpened = false;
 
-if (envelope) {
+if (envelope){
 
   envelope.addEventListener("click", () => {
 
@@ -237,16 +243,15 @@ if (envelope) {
 
     envelope.classList.add("open");
 
-    if (envelopeHint) {
+
+    if (envelopeHint){
 
       envelopeHint.textContent =
         "💗 তোমার জন্য একটা ছোট্ট চিঠি...";
 
     }
 
-    /*
-      Surprise button একটু পরে দেখাবে।
-    */
+
     setTimeout(() => {
 
       surprise.classList.add("show");
@@ -264,7 +269,7 @@ if (envelope) {
 
 let surpriseOpened = false;
 
-if (surpriseButton) {
+if (surpriseButton){
 
   surpriseButton.addEventListener("click", () => {
 
@@ -274,18 +279,14 @@ if (surpriseButton) {
 
     surpriseText.classList.add("show");
 
-    /*
-      Special message reveal.
-    */
+
     setTimeout(() => {
 
       specialMessage.classList.add("show");
 
     }, 700);
 
-    /*
-      ছোট্ট background burst.
-    */
+
     createHeartBurst(18);
 
   });
@@ -318,19 +319,13 @@ captionCards.forEach(card => {
 
 function createBackgroundEffects(){
 
-  /*
-    Static sparks.
-  */
-  for (let i = 0; i < 32; i++) {
+  for (let i = 0; i < 32; i++){
 
     createSpark();
 
   }
 
 
-  /*
-    Floating particles.
-  */
   setInterval(() => {
 
     createParticle();
@@ -341,6 +336,8 @@ function createBackgroundEffects(){
 
 
 function createSpark(){
+
+  if (!background) return;
 
   const spark =
     document.createElement("div");
@@ -363,6 +360,8 @@ function createSpark(){
 
 function createParticle(){
 
+  if (!background) return;
+
   const particle =
     document.createElement("div");
 
@@ -376,27 +375,34 @@ function createParticle(){
       )
     ];
 
+
   particle.style.left =
     Math.random() * 100 + "%";
 
   particle.style.top =
     65 + Math.random() * 35 + "%";
 
+
   particle.style.fontSize =
     (12 + Math.random() * 20) + "px";
+
 
   particle.style.color =
     Math.random() > .5
       ? "#ffabc9"
       : "#d8b5ff";
 
+
   const duration =
     5 + Math.random() * 5;
+
 
   particle.style.animationDuration =
     duration + "s";
 
+
   background.appendChild(particle);
+
 
   setTimeout(() => {
 
@@ -413,7 +419,7 @@ function createParticle(){
 
 function createHeartBurst(amount = 15){
 
-  for (let i = 0; i < amount; i++) {
+  for (let i = 0; i < amount; i++){
 
     const heart =
       document.createElement("div");
@@ -422,6 +428,7 @@ function createHeartBurst(amount = 15){
       Math.random() > .5
         ? "♥"
         : "♡";
+
 
     heart.style.position =
       "fixed";
@@ -447,7 +454,9 @@ function createHeartBurst(amount = 15){
     heart.style.textShadow =
       "0 0 15px #ff4e91";
 
+
     document.body.appendChild(heart);
+
 
     const angle =
       Math.random() * Math.PI * 2;
@@ -461,9 +470,11 @@ function createHeartBurst(amount = 15){
     const y =
       Math.sin(angle) * distance;
 
+
     heart.animate(
 
       [
+
         {
           transform:
             "translate(-50%,-50%) scale(.4)",
@@ -475,9 +486,11 @@ function createHeartBurst(amount = 15){
             `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(1.2)`,
           opacity: 0
         }
+
       ],
 
       {
+
         duration:
           900 + Math.random() * 700,
 
@@ -486,9 +499,11 @@ function createHeartBurst(amount = 15){
 
         fill:
           "forwards"
+
       }
 
     );
+
 
     setTimeout(() => {
 
@@ -515,20 +530,24 @@ function createSlideshow({
 
 }){
 
-  if (!imageElement || !dotsElement) {
+  if (!imageElement || !dotsElement){
     return;
   }
 
-  if (!images || images.length === 0) {
+
+  if (!images || images.length === 0){
 
     imageElement.removeAttribute("src");
 
-    if (countElement) {
+    if (countElement){
+
       countElement.textContent =
         "No photos";
+
     }
 
     return;
+
   }
 
 
@@ -538,7 +557,9 @@ function createSlideshow({
   /*
     Create dots.
   */
+
   dotsElement.innerHTML = "";
+
 
   images.forEach((_, index) => {
 
@@ -547,9 +568,13 @@ function createSlideshow({
 
     dot.className = "dot";
 
-    if (index === 0) {
+
+    if (index === 0){
+
       dot.classList.add("active");
+
     }
+
 
     dot.addEventListener("click", () => {
 
@@ -558,6 +583,7 @@ function createSlideshow({
       showSlide();
 
     });
+
 
     dotsElement.appendChild(dot);
 
@@ -572,9 +598,7 @@ function createSlideshow({
 
     imageElement.classList.remove("active");
 
-    /*
-      Slight delay creates smooth transition.
-    */
+
     setTimeout(() => {
 
       imageElement.src =
@@ -595,7 +619,7 @@ function createSlideshow({
     });
 
 
-    if (countElement) {
+    if (countElement){
 
       countElement.textContent =
         `${current + 1} / ${images.length}`;
@@ -608,13 +632,14 @@ function createSlideshow({
   /*
     Initial image.
   */
+
   imageElement.src =
     images[0];
 
   imageElement.classList.add("active");
 
 
-  if (countElement) {
+  if (countElement){
 
     countElement.textContent =
       `1 / ${images.length}`;
@@ -625,7 +650,8 @@ function createSlideshow({
   /*
     Automatic slideshow.
   */
-  if (images.length > 1) {
+
+  if (images.length > 1){
 
     setInterval(() => {
 
@@ -690,8 +716,12 @@ createSlideshow({
 
 
 /* =========================================================
-   COUPLE PHOTOS
+   COUPLE PHOTO
    ========================================================= */
+
+/*
+  এখন শুধু একটি couple photo load হবে।
+*/
 
 function loadCouplePhotos(){
 
@@ -711,38 +741,41 @@ function loadCouplePhotos(){
       </p>`;
 
     return;
+
   }
 
 
-  COUPLE_PHOTOS.forEach(
-    (src, index) => {
+  /*
+    শুধু প্রথম ছবিটা ব্যবহার করা হচ্ছে।
+  */
 
-      const card =
-        document.createElement("div");
-
-      card.className =
-        "couple-card";
+  const src =
+    COUPLE_PHOTOS[0];
 
 
-      const image =
-        document.createElement("img");
+  const card =
+    document.createElement("div");
 
-      image.src =
-        src;
-
-      image.alt =
-        `Our memory ${index + 1}`;
-
-      image.loading =
-        "lazy";
+  card.className =
+    "couple-card";
 
 
-      card.appendChild(image);
+  const image =
+    document.createElement("img");
 
-      coupleGrid.appendChild(card);
+  image.src =
+    src;
 
-    }
-  );
+  image.alt =
+    "Our special memory";
+
+  image.loading =
+    "lazy";
+
+
+  card.appendChild(image);
+
+  coupleGrid.appendChild(card);
 
 }
 
@@ -756,6 +789,7 @@ loadCouplePhotos();
 
 let currentGirlVideo = 0;
 
+
 function setupGirlVideos(){
 
   if (!girlVideo) return;
@@ -766,10 +800,19 @@ function setupGirlVideos(){
     GIRL_VIDEOS.length === 0
   ){
 
-    girlStatus.textContent =
-      "🎬 কোনো ভিডিও যোগ করা হয়নি";
+    if (girlStatus){
 
-    girlDownload.removeAttribute("href");
+      girlStatus.textContent =
+        "🎬 কোনো ভিডিও যোগ করা হয়নি";
+
+    }
+
+
+    if (girlDownload){
+
+      girlDownload.removeAttribute("href");
+
+    }
 
     return;
 
@@ -807,21 +850,30 @@ function loadGirlVideo(index, autoplay = false){
   girlVideo.load();
 
 
-  girlDownload.href =
-    src;
+  if (girlDownload){
 
-  girlDownload.download =
-    src.split("/").pop();
+    girlDownload.href =
+      src;
+
+    girlDownload.download =
+      src.split("/").pop();
+
+  }
 
 
-  girlStatus.textContent =
-    `🎬 Video ${index + 1} / ${GIRL_VIDEOS.length}`;
+  if (girlStatus){
+
+    girlStatus.textContent =
+      `🎬 Video ${index + 1} / ${GIRL_VIDEOS.length}`;
+
+  }
 
 
-  if (autoplay) {
+  if (autoplay){
 
     const playPromise =
       girlVideo.play();
+
 
     if (
       playPromise &&
@@ -841,6 +893,7 @@ function loadGirlVideo(index, autoplay = false){
   When one video ends,
   next video automatically starts.
 */
+
 if (girlVideo){
 
   girlVideo.addEventListener(
@@ -859,8 +912,12 @@ if (girlVideo){
 
       } else {
 
-        girlStatus.textContent =
-          "❤️ সব ভিডিও দেখা শেষ";
+        if (girlStatus){
+
+          girlStatus.textContent =
+            "❤️ সব ভিডিও দেখা শেষ";
+
+        }
 
       }
 
@@ -872,12 +929,21 @@ if (girlVideo){
     "play",
     () => {
 
-      girlVideoWrap.classList.add(
-        "playing"
-      );
+      if (girlVideoWrap){
 
-      girlStatus.textContent =
-        `▶️ Playing ${currentGirlVideo + 1} / ${GIRL_VIDEOS.length}`;
+        girlVideoWrap.classList.add(
+          "playing"
+        );
+
+      }
+
+
+      if (girlStatus){
+
+        girlStatus.textContent =
+          `▶️ Playing ${currentGirlVideo + 1} / ${GIRL_VIDEOS.length}`;
+
+      }
 
     }
   );
@@ -887,9 +953,13 @@ if (girlVideo){
     "pause",
     () => {
 
-      girlVideoWrap.classList.remove(
-        "playing"
-      );
+      if (girlVideoWrap){
+
+        girlVideoWrap.classList.remove(
+          "playing"
+        );
+
+      }
 
     }
   );
@@ -948,8 +1018,12 @@ if (girlVideo){
     "error",
     () => {
 
-      girlStatus.textContent =
-        "⚠️ ভিডিওটি পাওয়া যাচ্ছে না। filename/path check করো।";
+      if (girlStatus){
+
+        girlStatus.textContent =
+          "⚠️ ভিডিওটি পাওয়া যাচ্ছে না। filename/path check করো।";
+
+      }
 
     }
   );
@@ -968,6 +1042,7 @@ if (specialPlayer){
 
       const status =
         parent?.querySelector(".video-status");
+
 
       if (status){
 
@@ -993,8 +1068,11 @@ if (backTopButton){
     () => {
 
       window.scrollTo({
+
         top:0,
+
         behavior:"smooth"
+
       });
 
     }
@@ -1010,6 +1088,7 @@ if (backTopButton){
 function preloadImages(images){
 
   if (!images) return;
+
 
   images.forEach(src => {
 
@@ -1042,15 +1121,11 @@ document.addEventListener(
     const element =
       event.target;
 
+
     if (
       element &&
       element.tagName === "IMG"
     ){
-
-      /*
-        Broken image হলে slideshow
-        completely disappear করবে না।
-      */
 
       if (
         element.classList.contains(
@@ -1078,9 +1153,7 @@ document.addEventListener(
   () => {
 
     /*
-      Browser tab hidden হলে videos
-      automatically pause করা হচ্ছে না,
-      যাতে original behavior simple থাকে।
+      Original behavior unchanged.
     */
 
   }
