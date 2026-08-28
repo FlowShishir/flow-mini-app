@@ -1,6 +1,6 @@
 /* =========================================================
    JUNNU GIFT WEBSITE
-   JavaScript
+   SUPABASE DYNAMIC VERSION
    ========================================================= */
 
 
@@ -8,64 +8,7 @@
    CONFIGURATION
    ========================================================= */
 
-
-/*
-  HER PHOTOS
-*/
-
-const HER_PHOTOS = [
-  "assets/images/her-01.jpg",
-  "assets/images/her-02.jpg",
-  "assets/images/her-03.jpg",
-  "assets/images/her-04.jpg"
-];
-
-
-/*
-  MY PHOTOS
-*/
-
-const MY_PHOTOS = [
-  "assets/images/my-01.jpg",
-  "assets/images/my-02.jpg",
-  "assets/images/my-03.jpg",
-  "assets/images/my-04.jpg"
-];
-
-
-/*
-  COUPLE PHOTOS
-
-  এখানে এখন শুধু ১টা ছবি থাকবে।
-*/
-
-const COUPLE_PHOTOS = [
-  "assets/images/couple-01.jpg"
-];
-
-
-/*
-  GIRL VIDEOS
-*/
-
-const GIRL_VIDEOS = [
-  "assets/videos/her-01.mp4",
-  "assets/videos/her-02.mp4",
-  "assets/videos/her-03.mp4"
-];
-
-
-/*
-  SPECIAL VIDEO
-*/
-
-const SPECIAL_VIDEO =
-  "assets/videos/special.mp4";
-
-
-/*
-  Background floating symbols.
-*/
+const MEDIA_BUCKET = "media";
 
 const PARTICLE_SYMBOLS = [
   "♡",
@@ -141,10 +84,437 @@ const backTopButton =
 
 
 /* =========================================================
-   LETTER TEXT
+   SUPABASE DATA
    ========================================================= */
 
-const LETTER_TYPING_TEXT =
+let SITE_CONTENT = {};
+
+let HER_PHOTOS = [];
+
+let MY_PHOTOS = [];
+
+let COUPLE_PHOTOS = [];
+
+let GIRL_VIDEOS = [];
+
+let SPECIAL_VIDEO = "";
+
+let VOICE_FILE = "";
+
+
+/* =========================================================
+   GET PUBLIC STORAGE URL
+   ========================================================= */
+
+function getMediaUrl(folder, filename){
+
+  if(!filename) return "";
+
+  const path =
+    `${folder}/${filename}`;
+
+  const {
+    data
+  } =
+  supabaseClient
+    .storage
+    .from(MEDIA_BUCKET)
+    .getPublicUrl(path);
+
+  return data?.publicUrl || "";
+
+}
+
+
+/* =========================================================
+   LOAD WEBSITE CONTENT
+   ========================================================= */
+
+async function loadSiteContent(){
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+    await supabaseClient
+      .from("site_content")
+      .select("*");
+
+    if(error){
+
+      console.error(
+        "Content loading error:",
+        error
+      );
+
+      return;
+
+    }
+
+
+    SITE_CONTENT = {};
+
+
+    (data || []).forEach(item => {
+
+      if(item.content_key){
+
+        SITE_CONTENT[
+          item.content_key
+        ] =
+          item.content_value || "";
+
+      }
+
+    });
+
+
+    applySiteContent();
+
+
+  }catch(error){
+
+    console.error(
+      "Site content error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   APPLY TEXT CONTENT
+   ========================================================= */
+
+function applySiteContent(){
+
+  /*
+    Hero title
+  */
+
+  const heroTitle =
+    document.querySelector("#open h1");
+
+  if(
+    heroTitle &&
+    SITE_CONTENT.hero_title
+  ){
+
+    heroTitle.textContent =
+      SITE_CONTENT.hero_title;
+
+  }
+
+
+  /*
+    Hero subtitle
+  */
+
+  const heroSubtitle =
+    document.querySelector(
+      "#open .sub"
+    );
+
+  if(
+    heroSubtitle &&
+    SITE_CONTENT.hero_subtitle
+  ){
+
+    heroSubtitle.textContent =
+      SITE_CONTENT.hero_subtitle;
+
+  }
+
+
+  /*
+    Letter title
+  */
+
+  const letterTitle =
+    document.querySelector(
+      ".letter h2"
+    );
+
+  if(
+    letterTitle &&
+    SITE_CONTENT.letter_title
+  ){
+
+    letterTitle.textContent =
+      SITE_CONTENT.letter_title;
+
+  }
+
+
+  /*
+    Letter text
+  */
+
+  const letterText =
+    document.querySelector(
+      ".letter p"
+    );
+
+  if(
+    letterText &&
+    SITE_CONTENT.letter_text
+  ){
+
+    letterText.textContent =
+      SITE_CONTENT.letter_text;
+
+  }
+
+
+  /*
+    Special message heading
+  */
+
+  const specialHeading =
+    document.querySelector(
+      "#specialMessage h2"
+    );
+
+  if(
+    specialHeading &&
+    SITE_CONTENT.special_message
+  ){
+
+    specialHeading.textContent =
+      SITE_CONTENT.special_message;
+
+  }
+
+
+  /*
+    Special message body
+  */
+
+  const specialParagraph =
+    document.querySelector(
+      "#specialMessage p"
+    );
+
+  if(
+    specialParagraph &&
+    SITE_CONTENT.special_message
+  ){
+
+    /*
+      Keep the existing paragraph
+      if special_message is only a short title.
+    */
+
+  }
+
+
+  /*
+    Ending section
+
+    We use ending_message
+    for the ending paragraph.
+  */
+
+  const endingParagraph =
+    document.querySelector(
+      ".ending p"
+    );
+
+  if(
+    endingParagraph &&
+    SITE_CONTENT.ending_message
+  ){
+
+    endingParagraph.textContent =
+      SITE_CONTENT.ending_message;
+
+  }
+
+}
+
+
+/* =========================================================
+   LOAD STORAGE MEDIA
+   ========================================================= */
+
+async function loadStorageMedia(){
+
+  try{
+
+    /*
+      HER PHOTOS
+    */
+
+    HER_PHOTOS =
+      await listFolderFiles("images");
+
+
+    /*
+      HER VIDEOS
+    */
+
+    GIRL_VIDEOS =
+      await listFolderFiles("videos");
+
+
+    /*
+      VOICE
+    */
+
+    const voiceFiles =
+      await listFolderFiles("voice");
+
+
+    if(voiceFiles.length > 0){
+
+      VOICE_FILE =
+        voiceFiles[0];
+
+    }
+
+
+    /*
+      COUPLE PHOTO
+    */
+
+    COUPLE_PHOTOS =
+      await listFolderFiles("couple");
+
+
+    /*
+      MY PHOTOS
+
+      Current admin system does not have
+      a separate my-photos folder.
+
+      If later you create media/my/
+      this will automatically work.
+    */
+
+    MY_PHOTOS =
+      await listFolderFiles("my");
+
+
+    /*
+      Special video
+
+      We check for a filename containing
+      "special".
+    */
+
+    const specialCandidate =
+      GIRL_VIDEOS.find(
+        file =>
+          file.toLowerCase().includes("special")
+      );
+
+
+    if(specialCandidate){
+
+      SPECIAL_VIDEO =
+        getMediaUrl(
+          "videos",
+          specialCandidate
+        );
+
+    }
+
+
+  }catch(error){
+
+    console.error(
+      "Storage media error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   LIST STORAGE FOLDER
+   ========================================================= */
+
+async function listFolderFiles(folder){
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+    await supabaseClient
+      .storage
+      .from(MEDIA_BUCKET)
+      .list(
+        folder,
+        {
+          limit:100,
+          offset:0,
+          sortBy:{
+            column:"created_at",
+            order:"asc"
+          }
+        }
+      );
+
+
+    if(error){
+
+      console.warn(
+        `Could not load ${folder}:`,
+        error
+      );
+
+      return [];
+
+    }
+
+
+    if(!data){
+
+      return [];
+
+    }
+
+
+    return data
+      .filter(file => {
+
+        return (
+          file &&
+          file.name &&
+          !file.name.endsWith("/")
+        );
+
+      })
+      .map(file => file.name);
+
+
+  }catch(error){
+
+    console.error(
+      `Folder ${folder} error:`,
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+
+/* =========================================================
+   LETTER TYPING TEXT
+   ========================================================= */
+
+const DEFAULT_LETTER_TYPING_TEXT =
   "তুমি আমার জীবনের এমন একজন মানুষ, যাকে ভুলে যাওয়া আমার কাছে নিজের একটা অংশকে ভুলে যাওয়ার মতো। তোমাকে পেয়ে আমি সত্যিই কৃতজ্ঞ।";
 
 
@@ -154,41 +524,48 @@ const LETTER_TYPING_TEXT =
 
 let giftOpened = false;
 
-if (goButton){
+if(goButton){
 
-  goButton.addEventListener("click", () => {
+  goButton.addEventListener(
+    "click",
+    () => {
 
-    if (giftOpened) return;
+      if(giftOpened) return;
 
-    giftOpened = true;
+      giftOpened = true;
 
-    openScreen.style.display = "none";
+      openScreen.style.display =
+        "none";
 
-    exp.classList.add("show");
+      exp.classList.add("show");
 
-    startTyping();
+      startTyping();
 
-    createBackgroundEffects();
-
-
-    setTimeout(() => {
-
-      surprise.classList.add("show");
-
-    }, 2200);
+      createBackgroundEffects();
 
 
-    setTimeout(() => {
+      setTimeout(() => {
 
-      document.querySelector("#exp section")
-        ?.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
+        surprise?.classList.add(
+          "show"
+        );
 
-    }, 300);
+      },2200);
 
-  });
+
+      setTimeout(() => {
+
+        document
+          .querySelector("#exp section")
+          ?.scrollIntoView({
+            behavior:"smooth",
+            block:"start"
+          });
+
+      },300);
+
+    }
+  );
 
 }
 
@@ -199,28 +576,40 @@ if (goButton){
 
 function startTyping(){
 
-  if (!typingElement) return;
+  if(!typingElement) return;
 
   typingElement.textContent = "";
+
+  const text =
+    SITE_CONTENT.letter_text ||
+    DEFAULT_LETTER_TYPING_TEXT;
 
   let index = 0;
 
   const speed = 32;
 
+
   function type(){
 
-    if (index >= LETTER_TYPING_TEXT.length) {
+    if(index >= text.length){
+
       return;
+
     }
 
+
     typingElement.textContent +=
-      LETTER_TYPING_TEXT[index];
+      text[index];
 
     index++;
 
-    setTimeout(type, speed);
+    setTimeout(
+      type,
+      speed
+    );
 
   }
+
 
   type();
 
@@ -233,63 +622,77 @@ function startTyping(){
 
 let envelopeOpened = false;
 
-if (envelope){
+if(envelope){
 
-  envelope.addEventListener("click", () => {
+  envelope.addEventListener(
+    "click",
+    () => {
 
-    if (envelopeOpened) return;
+      if(envelopeOpened) return;
 
-    envelopeOpened = true;
+      envelopeOpened = true;
 
-    envelope.classList.add("open");
+      envelope.classList.add(
+        "open"
+      );
 
 
-    if (envelopeHint){
+      if(envelopeHint){
 
-      envelopeHint.textContent =
-        "💗 তোমার জন্য একটা ছোট্ট চিঠি...";
+        envelopeHint.textContent =
+          "💗 তোমার জন্য একটা ছোট্ট চিঠি...";
+
+      }
+
+
+      setTimeout(() => {
+
+        surprise?.classList.add(
+          "show"
+        );
+
+      },1200);
 
     }
-
-
-    setTimeout(() => {
-
-      surprise.classList.add("show");
-
-    }, 1200);
-
-  });
+  );
 
 }
 
 
 /* =========================================================
-   SURPRISE BUTTON
+   SURPRISE
    ========================================================= */
 
 let surpriseOpened = false;
 
-if (surpriseButton){
+if(surpriseButton){
 
-  surpriseButton.addEventListener("click", () => {
+  surpriseButton.addEventListener(
+    "click",
+    () => {
 
-    if (surpriseOpened) return;
+      if(surpriseOpened) return;
 
-    surpriseOpened = true;
+      surpriseOpened = true;
 
-    surpriseText.classList.add("show");
-
-
-    setTimeout(() => {
-
-      specialMessage.classList.add("show");
-
-    }, 700);
+      surpriseText?.classList.add(
+        "show"
+      );
 
 
-    createHeartBurst(18);
+      setTimeout(() => {
 
-  });
+        specialMessage?.classList.add(
+          "show"
+        );
+
+      },700);
+
+
+      createHeartBurst(18);
+
+    }
+  );
 
 }
 
@@ -299,27 +702,34 @@ if (surpriseButton){
    ========================================================= */
 
 const captionCards =
-  document.querySelectorAll(".caption-card");
+  document.querySelectorAll(
+    ".caption-card"
+  );
 
 
 captionCards.forEach(card => {
 
-  card.addEventListener("click", () => {
+  card.addEventListener(
+    "click",
+    () => {
 
-    card.classList.toggle("open");
+      card.classList.toggle(
+        "open"
+      );
 
-  });
+    }
+  );
 
 });
 
 
 /* =========================================================
-   BACKGROUND PARTICLES
+   BACKGROUND EFFECTS
    ========================================================= */
 
 function createBackgroundEffects(){
 
-  for (let i = 0; i < 32; i++){
+  for(let i=0;i<32;i++){
 
     createSpark();
 
@@ -330,42 +740,51 @@ function createBackgroundEffects(){
 
     createParticle();
 
-  }, 850);
+  },850);
 
 }
 
 
 function createSpark(){
 
-  if (!background) return;
+  if(!background) return;
 
   const spark =
     document.createElement("div");
 
-  spark.className = "spark";
+  spark.className =
+    "spark";
+
 
   spark.style.left =
-    Math.random() * 100 + "%";
+    Math.random()*100 + "%";
+
 
   spark.style.top =
-    Math.random() * 100 + "%";
+    Math.random()*100 + "%";
+
 
   spark.style.animationDelay =
-    Math.random() * 2 + "s";
+    Math.random()*2 + "s";
 
-  background.appendChild(spark);
+
+  background.appendChild(
+    spark
+  );
 
 }
 
 
 function createParticle(){
 
-  if (!background) return;
+  if(!background) return;
 
   const particle =
     document.createElement("div");
 
-  particle.className = "particle";
+  particle.className =
+    "particle";
+
 
   particle.textContent =
     PARTICLE_SYMBOLS[
@@ -377,14 +796,18 @@ function createParticle(){
 
 
   particle.style.left =
-    Math.random() * 100 + "%";
+    Math.random()*100 + "%";
+
 
   particle.style.top =
-    65 + Math.random() * 35 + "%";
+    65 +
+    Math.random()*35 +
+    "%";
 
 
   particle.style.fontSize =
-    (12 + Math.random() * 20) + "px";
+    (12 + Math.random()*20) +
+    "px";
 
 
   particle.style.color =
@@ -394,21 +817,23 @@ function createParticle(){
 
 
   const duration =
-    5 + Math.random() * 5;
+    5 + Math.random()*5;
 
 
   particle.style.animationDuration =
     duration + "s";
 
 
-  background.appendChild(particle);
+  background.appendChild(
+    particle
+  );
 
 
   setTimeout(() => {
 
     particle.remove();
 
-  }, duration * 1000 + 500);
+  },duration*1000+500);
 
 }
 
@@ -417,12 +842,21 @@ function createParticle(){
    HEART BURST
    ========================================================= */
 
-function createHeartBurst(amount = 15){
+function createHeartBurst(
+  amount = 15
+){
 
-  for (let i = 0; i < amount; i++){
+  for(
+    let i=0;
+    i<amount;
+    i++
+  ){
 
     const heart =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
+
 
     heart.textContent =
       Math.random() > .5
@@ -433,42 +867,60 @@ function createHeartBurst(amount = 15){
     heart.style.position =
       "fixed";
 
+
     heart.style.left =
       "50%";
+
 
     heart.style.top =
       "50%";
 
+
     heart.style.zIndex =
       "9999";
+
 
     heart.style.pointerEvents =
       "none";
 
+
     heart.style.color =
       "#ffabc9";
 
+
     heart.style.fontSize =
-      (14 + Math.random() * 18) + "px";
+      (14+Math.random()*18) +
+      "px";
+
 
     heart.style.textShadow =
       "0 0 15px #ff4e91";
 
 
-    document.body.appendChild(heart);
+    document.body.appendChild(
+      heart
+    );
 
 
     const angle =
-      Math.random() * Math.PI * 2;
+      Math.random() *
+      Math.PI *
+      2;
+
 
     const distance =
-      80 + Math.random() * 180;
+      80 +
+      Math.random()*180;
+
 
     const x =
-      Math.cos(angle) * distance;
+      Math.cos(angle) *
+      distance;
+
 
     const y =
-      Math.sin(angle) * distance;
+      Math.sin(angle) *
+      distance;
 
 
     heart.animate(
@@ -478,28 +930,26 @@ function createHeartBurst(amount = 15){
         {
           transform:
             "translate(-50%,-50%) scale(.4)",
-          opacity: 1
+          opacity:1
         },
 
         {
           transform:
             `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(1.2)`,
-          opacity: 0
+          opacity:0
         }
 
       ],
 
       {
-
         duration:
-          900 + Math.random() * 700,
+          900 +
+          Math.random()*700,
 
         easing:
           "cubic-bezier(.22,.61,.36,1)",
 
-        fill:
-          "forwards"
-
+        fill:"forwards"
       }
 
     );
@@ -509,7 +959,7 @@ function createHeartBurst(amount = 15){
 
       heart.remove();
 
-    }, 1800);
+    },1800);
 
   }
 
@@ -530,16 +980,21 @@ function createSlideshow({
 
 }){
 
-  if (!imageElement || !dotsElement){
+  if(!imageElement || !dotsElement){
+
     return;
+
   }
 
 
-  if (!images || images.length === 0){
+  if(!images || images.length === 0){
 
-    imageElement.removeAttribute("src");
+    imageElement.removeAttribute(
+      "src"
+    );
 
-    if (countElement){
+
+    if(countElement){
 
       countElement.textContent =
         "No photos";
@@ -554,49 +1009,64 @@ function createSlideshow({
   let current = 0;
 
 
-  /*
-    Create dots.
-  */
-
-  dotsElement.innerHTML = "";
+  dotsElement.innerHTML =
+    "";
 
 
-  images.forEach((_, index) => {
+  images.forEach(
+    (_,index) => {
 
-    const dot =
-      document.createElement("span");
+      const dot =
+        document.createElement(
+          "span"
+        );
 
-    dot.className = "dot";
+
+      dot.className =
+        "dot";
 
 
-    if (index === 0){
+      if(index === 0){
 
-      dot.classList.add("active");
+        dot.classList.add(
+          "active"
+        );
+
+      }
+
+
+      dot.addEventListener(
+        "click",
+        () => {
+
+          current =
+            index;
+
+          showSlide();
+
+        }
+      );
+
+
+      dotsElement.appendChild(
+        dot
+      );
 
     }
-
-
-    dot.addEventListener("click", () => {
-
-      current = index;
-
-      showSlide();
-
-    });
-
-
-    dotsElement.appendChild(dot);
-
-  });
+  );
 
 
   const dots =
-    dotsElement.querySelectorAll(".dot");
+    dotsElement.querySelectorAll(
+      ".dot"
+    );
 
 
   function showSlide(){
 
-    imageElement.classList.remove("active");
+    imageElement.classList.remove(
+      "active"
+    );
 
 
     setTimeout(() => {
@@ -604,42 +1074,45 @@ function createSlideshow({
       imageElement.src =
         images[current];
 
-      imageElement.classList.add("active");
-
-    }, 80);
-
-
-    dots.forEach((dot, index) => {
-
-      dot.classList.toggle(
-        "active",
-        index === current
+      imageElement.classList.add(
+        "active"
       );
 
-    });
+    },80);
 
 
-    if (countElement){
+    dots.forEach(
+      (dot,index) => {
+
+        dot.classList.toggle(
+          "active",
+          index === current
+        );
+
+      }
+    );
+
+
+    if(countElement){
 
       countElement.textContent =
-        `${current + 1} / ${images.length}`;
+        `${current+1} / ${images.length}`;
 
     }
 
   }
 
 
-  /*
-    Initial image.
-  */
-
   imageElement.src =
     images[0];
 
-  imageElement.classList.add("active");
+
+  imageElement.classList.add(
+    "active"
+  );
 
 
-  if (countElement){
+  if(countElement){
 
     countElement.textContent =
       `1 / ${images.length}`;
@@ -647,20 +1120,17 @@ function createSlideshow({
   }
 
 
-  /*
-    Automatic slideshow.
-  */
-
-  if (images.length > 1){
+  if(images.length > 1){
 
     setInterval(() => {
 
       current =
-        (current + 1) % images.length;
+        (current+1) %
+        images.length;
 
       showSlide();
 
-    }, interval);
+    },interval);
 
   }
 
@@ -671,66 +1141,99 @@ function createSlideshow({
    HER PHOTO SLIDESHOW
    ========================================================= */
 
-createSlideshow({
+function setupHerPhotos(){
 
-  imageElement:
-    document.getElementById("herImg"),
+  const images =
+    HER_PHOTOS.map(
+      file =>
+        getMediaUrl(
+          "images",
+          file
+        )
+    );
 
-  dotsElement:
-    document.getElementById("herDots"),
 
-  countElement:
-    document.getElementById("herCount"),
+  createSlideshow({
 
-  images:
-    HER_PHOTOS,
+    imageElement:
+      document.getElementById(
+        "herImg"
+      ),
 
-  interval:
-    4500
+    dotsElement:
+      document.getElementById(
+        "herDots"
+      ),
 
-});
+    countElement:
+      document.getElementById(
+        "herCount"
+      ),
+
+    images:images,
+
+    interval:4500
+
+  });
+
+}
 
 
 /* =========================================================
    MY PHOTO SLIDESHOW
    ========================================================= */
 
-createSlideshow({
+function setupMyPhotos(){
 
-  imageElement:
-    document.getElementById("myImg"),
+  const images =
+    MY_PHOTOS.map(
+      file =>
+        getMediaUrl(
+          "my",
+          file
+        )
+    );
 
-  dotsElement:
-    document.getElementById("myDots"),
 
-  countElement:
-    document.getElementById("myCount"),
+  createSlideshow({
 
-  images:
-    MY_PHOTOS,
+    imageElement:
+      document.getElementById(
+        "myImg"
+      ),
 
-  interval:
-    4500
+    dotsElement:
+      document.getElementById(
+        "myDots"
+      ),
 
-});
+    countElement:
+      document.getElementById(
+        "myCount"
+      ),
+
+    images:images,
+
+    interval:4500
+
+  });
+
+}
 
 
 /* =========================================================
    COUPLE PHOTO
    ========================================================= */
 
-/*
-  এখন শুধু একটি couple photo load হবে।
-*/
-
 function loadCouplePhotos(){
 
-  if (!coupleGrid) return;
+  if(!coupleGrid) return;
 
-  coupleGrid.innerHTML = "";
+  coupleGrid.innerHTML =
+    "";
 
 
-  if (
+  if(
     !COUPLE_PHOTOS ||
     COUPLE_PHOTOS.length === 0
   ){
@@ -745,42 +1248,51 @@ function loadCouplePhotos(){
   }
 
 
-  /*
-    শুধু প্রথম ছবিটা ব্যবহার করা হচ্ছে।
-  */
-
   const src =
-    COUPLE_PHOTOS[0];
+    getMediaUrl(
+      "couple",
+      COUPLE_PHOTOS[0]
+    );
 
 
   const card =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
+
 
   card.className =
     "couple-card";
 
 
   const image =
-    document.createElement("img");
+    document.createElement(
+      "img"
+    );
+
 
   image.src =
     src;
 
+
   image.alt =
     "Our special memory";
+
 
   image.loading =
     "lazy";
 
 
-  card.appendChild(image);
+  card.appendChild(
+    image
+  );
 
-  coupleGrid.appendChild(card);
+
+  coupleGrid.appendChild(
+    card
+  );
 
 }
-
-
-loadCouplePhotos();
 
 
 /* =========================================================
@@ -792,15 +1304,15 @@ let currentGirlVideo = 0;
 
 function setupGirlVideos(){
 
-  if (!girlVideo) return;
+  if(!girlVideo) return;
 
 
-  if (
+  if(
     !GIRL_VIDEOS ||
     GIRL_VIDEOS.length === 0
   ){
 
-    if (girlStatus){
+    if(girlStatus){
 
       girlStatus.textContent =
         "🎬 কোনো ভিডিও যোগ করা হয়নি";
@@ -808,9 +1320,11 @@ function setupGirlVideos(){
     }
 
 
-    if (girlDownload){
+    if(girlDownload){
 
-      girlDownload.removeAttribute("href");
+      girlDownload.removeAttribute(
+        "href"
+      );
 
     }
 
@@ -819,14 +1333,19 @@ function setupGirlVideos(){
   }
 
 
-  loadGirlVideo(0);
+  loadGirlVideo(
+    0
+  );
 
 }
 
 
-function loadGirlVideo(index, autoplay = false){
+function loadGirlVideo(
+  index,
+  autoplay = false
+){
 
-  if (
+  if(
     index < 0 ||
     index >= GIRL_VIDEOS.length
   ){
@@ -841,46 +1360,54 @@ function loadGirlVideo(index, autoplay = false){
 
 
   const src =
-    GIRL_VIDEOS[index];
+    getMediaUrl(
+      "videos",
+      GIRL_VIDEOS[index]
+    );
 
 
   girlVideo.src =
     src;
 
+
   girlVideo.load();
 
 
-  if (girlDownload){
+  if(girlDownload){
 
     girlDownload.href =
       src;
 
+
     girlDownload.download =
-      src.split("/").pop();
+      GIRL_VIDEOS[index];
 
   }
 
 
-  if (girlStatus){
+  if(girlStatus){
 
     girlStatus.textContent =
-      `🎬 Video ${index + 1} / ${GIRL_VIDEOS.length}`;
+      `🎬 Video ${index+1} / ${GIRL_VIDEOS.length}`;
 
   }
 
 
-  if (autoplay){
+  if(autoplay){
 
     const playPromise =
       girlVideo.play();
 
 
-    if (
+    if(
       playPromise &&
-      typeof playPromise.catch === "function"
+      typeof playPromise.catch ===
+      "function"
     ){
 
-      playPromise.catch(() => {});
+      playPromise.catch(
+        () => {}
+      );
 
     }
 
@@ -889,30 +1416,29 @@ function loadGirlVideo(index, autoplay = false){
 }
 
 
-/*
-  When one video ends,
-  next video automatically starts.
-*/
+/* =========================================================
+   VIDEO EVENTS
+   ========================================================= */
 
-if (girlVideo){
+if(girlVideo){
 
   girlVideo.addEventListener(
     "ended",
     () => {
 
-      if (
+      if(
         currentGirlVideo <
-        GIRL_VIDEOS.length - 1
+        GIRL_VIDEOS.length-1
       ){
 
         loadGirlVideo(
-          currentGirlVideo + 1,
+          currentGirlVideo+1,
           true
         );
 
-      } else {
+      }else{
 
-        if (girlStatus){
+        if(girlStatus){
 
           girlStatus.textContent =
             "❤️ সব ভিডিও দেখা শেষ";
@@ -929,19 +1455,15 @@ if (girlVideo){
     "play",
     () => {
 
-      if (girlVideoWrap){
-
-        girlVideoWrap.classList.add(
-          "playing"
-        );
-
-      }
+      girlVideoWrap?.classList.add(
+        "playing"
+      );
 
 
-      if (girlStatus){
+      if(girlStatus){
 
         girlStatus.textContent =
-          `▶️ Playing ${currentGirlVideo + 1} / ${GIRL_VIDEOS.length}`;
+          `▶️ Playing ${currentGirlVideo+1} / ${GIRL_VIDEOS.length}`;
 
       }
 
@@ -953,75 +1475,22 @@ if (girlVideo){
     "pause",
     () => {
 
-      if (girlVideoWrap){
-
-        girlVideoWrap.classList.remove(
-          "playing"
-        );
-
-      }
+      girlVideoWrap?.classList.remove(
+        "playing"
+      );
 
     }
   );
 
-}
-
-
-setupGirlVideos();
-
-
-/* =========================================================
-   SPECIAL VIDEO
-   ========================================================= */
-
-function setupSpecialVideo(){
-
-  if (!specialPlayer) return;
-
-
-  if (!SPECIAL_VIDEO){
-
-    return;
-
-  }
-
-
-  specialPlayer.src =
-    SPECIAL_VIDEO;
-
-  specialPlayer.load();
-
-
-  if (specialDownload){
-
-    specialDownload.href =
-      SPECIAL_VIDEO;
-
-    specialDownload.download =
-      SPECIAL_VIDEO.split("/").pop();
-
-  }
-
-}
-
-
-setupSpecialVideo();
-
-
-/* =========================================================
-   VIDEO ERROR HANDLING
-   ========================================================= */
-
-if (girlVideo){
 
   girlVideo.addEventListener(
     "error",
     () => {
 
-      if (girlStatus){
+      if(girlStatus){
 
         girlStatus.textContent =
-          "⚠️ ভিডিওটি পাওয়া যাচ্ছে না। filename/path check করো।";
+          "⚠️ ভিডিওটি পাওয়া যাচ্ছে না।";
 
       }
 
@@ -1031,193 +1500,4 @@ if (girlVideo){
 }
 
 
-if (specialPlayer){
-
-  specialPlayer.addEventListener(
-    "error",
-    () => {
-
-      const parent =
-        specialPlayer.closest(".special-box");
-
-      const status =
-        parent?.querySelector(".video-status");
-
-
-      if (status){
-
-        status.textContent =
-          "⚠️ Special video পাওয়া যাচ্ছে না।";
-
-      }
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   BACK TO TOP
-   ========================================================= */
-
-if (backTopButton){
-
-  backTopButton.addEventListener(
-    "click",
-    () => {
-
-      window.scrollTo({
-
-        top:0,
-
-        behavior:"smooth"
-
-      });
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   PRELOAD IMAGES
-   ========================================================= */
-
-function preloadImages(images){
-
-  if (!images) return;
-
-
-  images.forEach(src => {
-
-    const image =
-      new Image();
-
-    image.src =
-      src;
-
-  });
-
-}
-
-
-preloadImages(HER_PHOTOS);
-
-preloadImages(MY_PHOTOS);
-
-preloadImages(COUPLE_PHOTOS);
-
-
-/* =========================================================
-   IMAGE FALLBACK
-   ========================================================= */
-
-document.addEventListener(
-  "error",
-  event => {
-
-    const element =
-      event.target;
-
-
-    if (
-      element &&
-      element.tagName === "IMG"
-    ){
-
-      if (
-        element.classList.contains(
-          "slide-img"
-        )
-      ){
-
-        element.style.opacity = "0";
-
-      }
-
-    }
-
-  },
-  true
-);
-
-
-/* =========================================================
-   PAGE VISIBILITY
-   ========================================================= */
-
-document.addEventListener(
-  "visibilitychange",
-  () => {
-
-    /*
-      Original behavior unchanged.
-    */
-
-  }
-);
-/* =========================================================
-   SUPABASE VISUAL CONNECTION TEST
-   ========================================================= */
-
-async function testSupabaseConnection() {
-
-  const status = document.createElement("div");
-
-  status.id = "supabase-status";
-
-  status.style.cssText = `
-    position:fixed;
-    left:50%;
-    bottom:20px;
-    transform:translateX(-50%);
-    z-index:99999;
-    padding:12px 20px;
-    border-radius:999px;
-    background:#111a;
-    border:1px solid #ffabc7;
-    color:#fff;
-    font-size:14px;
-    backdrop-filter:blur(10px);
-  `;
-
-  status.textContent = "🔄 Checking Supabase...";
-
-  document.body.appendChild(status);
-
-  try {
-
-    const { error } = await supabaseClient
-      .from("site_content")
-      .select("*")
-      .limit(1);
-
-    if (error) {
-      throw error;
-    }
-
-    status.textContent =
-      "✅ Supabase Connected Successfully!";
-
-    status.style.borderColor = "#7dffb2";
-
-    setTimeout(() => {
-      status.remove();
-    }, 4000);
-
-  } catch (error) {
-
-    console.error(error);
-
-    status.textContent =
-      "❌ Supabase Connection Failed";
-
-    status.style.borderColor = "#ff6b8a";
-
-  }
-
-}
-
-testSupabaseConnection();
+/* =====================
