@@ -1158,3 +1158,13 @@ document.addEventListener(
 
   }
 );
+/* =========================================================
+   SUPABASE CONNECTION TEST
+   ========================================================= */
+
+console.log("Supabase URL:", SUPABASE_URL);
+console.log("Supabase client:", supabaseClient);
+
+if (supabaseClient) {
+  console.log("✅ Supabase connected successfully!");
+}
