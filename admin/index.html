@@ -1,1 +1,127 @@
+<!DOCTYPE html>
+<html lang="bn">
 
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Junnu Gift — Admin Login</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Noto+Serif+Bengali:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body>
+
+  <!-- Background -->
+  <div id="bg"></div>
+
+
+  <!-- Login -->
+  <main class="login-page">
+
+    <div class="login-card">
+
+      <div class="heart">
+        ❤️
+      </div>
+
+      <div class="eyebrow">
+        JUNNU GIFT
+      </div>
+
+      <h1>
+        Admin
+      </h1>
+
+      <p class="subtitle">
+        Welcome back
+      </p>
+
+
+      <form id="loginForm">
+
+        <div class="input-group">
+
+          <label for="email">
+            Email
+          </label>
+
+          <input
+            type="email"
+            id="email"
+            placeholder="Admin email"
+            autocomplete="email"
+            required
+          >
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label for="password">
+            Password
+          </label>
+
+          <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            autocomplete="current-password"
+            required
+          >
+
+        </div>
+
+
+        <button
+          type="submit"
+          class="login-btn"
+          id="loginBtn"
+        >
+          Login ❤️
+        </button>
+
+      </form>
+
+
+      <div
+        id="loginStatus"
+        class="status"
+      ></div>
+
+
+      <p class="security-note">
+        🔐 Only authorized admin can access this panel.
+      </p>
+
+    </div>
+
+  </main>
+
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Supabase Config -->
+  <script src="../supabase-config.js"></script>
+
+  <!-- Admin JS -->
+  <script src="script.js"></script>
+
+</body>
+
+  </html>
