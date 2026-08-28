@@ -1,1 +1,291 @@
+<!DOCTYPE html>
+<html lang="bn">
 
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Junnu Gift — Admin Dashboard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Noto+Serif+Bengali:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div id="bg"></div>
+
+  <main class="dashboard">
+
+    <!-- HEADER -->
+
+    <header class="dashboard-header">
+
+      <div>
+        <div class="eyebrow">
+          JUNNU GIFT
+        </div>
+
+        <h1>
+          Dashboard
+        </h1>
+
+        <p>
+          এখান থেকেই তোমার website manage করবে ❤️
+        </p>
+      </div>
+
+      <button
+        id="logoutBtn"
+        class="logout-btn"
+      >
+        Logout
+      </button>
+
+    </header>
+
+
+    <!-- STATUS -->
+
+    <div
+      id="globalStatus"
+      class="global-status"
+    ></div>
+
+
+    <!-- WEBSITE TEXT -->
+
+    <section class="panel">
+
+      <div class="panel-head">
+
+        <div>
+          <span class="panel-icon">📝</span>
+
+          <h2>
+            Website Content
+          </h2>
+
+          <p>
+            Website-এর লেখা এখান থেকে পরিবর্তন করো।
+          </p>
+        </div>
+
+      </div>
+
+
+      <div id="contentEditor">
+
+        <div class="loading">
+          🔄 Content loading...
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- MEDIA UPLOAD -->
+
+    <section class="panel">
+
+      <div class="panel-head">
+
+        <div>
+          <span class="panel-icon">🖼️</span>
+
+          <h2>
+            Media Upload
+          </h2>
+
+          <p>
+            ছবি, ভিডিও এবং voice upload করো।
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="upload-grid">
+
+        <!-- IMAGE -->
+
+        <div class="upload-card">
+
+          <div class="upload-icon">
+            🖼️
+          </div>
+
+          <h3>
+            Photos
+          </h3>
+
+          <p>
+            JPG, PNG, WEBP
+          </p>
+
+          <input
+            type="file"
+            id="imageInput"
+            accept="image/*"
+          >
+
+          <button
+            class="upload-btn"
+            id="imageUploadBtn"
+          >
+            Upload Photo
+          </button>
+
+          <div
+            id="imageStatus"
+            class="upload-status"
+          ></div>
+
+        </div>
+
+
+        <!-- VIDEO -->
+
+        <div class="upload-card">
+
+          <div class="upload-icon">
+            🎬
+          </div>
+
+          <h3>
+            Videos
+          </h3>
+
+          <p>
+            MP4, WEBM, MOV
+          </p>
+
+          <input
+            type="file"
+            id="videoInput"
+            accept="video/*"
+          >
+
+          <button
+            class="upload-btn"
+            id="videoUploadBtn"
+          >
+            Upload Video
+          </button>
+
+          <div
+            id="videoStatus"
+            class="upload-status"
+          ></div>
+
+        </div>
+
+
+        <!-- VOICE -->
+
+        <div class="upload-card">
+
+          <div class="upload-icon">
+            🎙️
+          </div>
+
+          <h3>
+            Voice
+          </h3>
+
+          <p>
+            MP3, WAV, M4A
+          </p>
+
+          <input
+            type="file"
+            id="voiceInput"
+            accept="audio/*"
+          >
+
+          <button
+            class="upload-btn"
+            id="voiceUploadBtn"
+          >
+            Upload Voice
+          </button>
+
+          <div
+            id="voiceStatus"
+            class="upload-status"
+          ></div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- MEDIA LIST -->
+
+    <section class="panel">
+
+      <div class="panel-head">
+
+        <div>
+          <span class="panel-icon">📁</span>
+
+          <h2>
+            Uploaded Media
+          </h2>
+
+          <p>
+            Storage-এর uploaded files এখানে দেখা যাবে।
+          </p>
+        </div>
+
+      </div>
+
+
+      <div id="mediaList">
+
+        <div class="loading">
+          🔄 Media loading...
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer class="dashboard-footer">
+
+      <span>
+        Junnu Gift Admin Panel ❤️
+      </span>
+
+    </footer>
+
+  </main>
+
+
+  <!-- SUPABASE -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="../supabase-config.js"></script>
+
+  <script src="dashboard.js"></script>
+
+</body>
+
+            </html>
