@@ -1159,12 +1159,65 @@ document.addEventListener(
   }
 );
 /* =========================================================
-   SUPABASE CONNECTION TEST
+   SUPABASE VISUAL CONNECTION TEST
    ========================================================= */
 
-console.log("Supabase URL:", SUPABASE_URL);
-console.log("Supabase client:", supabaseClient);
+async function testSupabaseConnection() {
 
-if (supabaseClient) {
-  console.log("✅ Supabase connected successfully!");
+  const status = document.createElement("div");
+
+  status.id = "supabase-status";
+
+  status.style.cssText = `
+    position:fixed;
+    left:50%;
+    bottom:20px;
+    transform:translateX(-50%);
+    z-index:99999;
+    padding:12px 20px;
+    border-radius:999px;
+    background:#111a;
+    border:1px solid #ffabc7;
+    color:#fff;
+    font-size:14px;
+    backdrop-filter:blur(10px);
+  `;
+
+  status.textContent = "🔄 Checking Supabase...";
+
+  document.body.appendChild(status);
+
+  try {
+
+    const { error } = await supabaseClient
+      .from("site_content")
+      .select("*")
+      .limit(1);
+
+    if (error) {
+      throw error;
+    }
+
+    status.textContent =
+      "✅ Supabase Connected Successfully!";
+
+    status.style.borderColor = "#7dffb2";
+
+    setTimeout(() => {
+      status.remove();
+    }, 4000);
+
+  } catch (error) {
+
+    console.error(error);
+
+    status.textContent =
+      "❌ Supabase Connection Failed";
+
+    status.style.borderColor = "#ff6b8a";
+
+  }
+
 }
+
+testSupabaseConnection();
