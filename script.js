@@ -1,14 +1,11 @@
 /* =========================================================
-   JUNNU GIFT — MAIN WEBSITE
-   Supabase Storage Edition
+   JUNNU GIFT — LOCAL ASSETS VERSION
+   No Supabase
+   No Database
+   No Admin
+   No Videos
+   No Voice
    ========================================================= */
-
-
-/* =========================================================
-   SUPABASE
-   ========================================================= */
-
-const MEDIA_BUCKET = "media";
 
 
 /* =========================================================
@@ -26,36 +23,86 @@ const envelopeHint = document.getElementById("eh");
 const surprise = document.getElementById("surprise");
 const surpriseButton = document.getElementById("rb");
 const surpriseText = document.getElementById("u");
-const specialMessage = document.getElementById("specialMessage");
+const specialMessage =
+  document.getElementById("specialMessage");
 
-const background = document.getElementById("bg");
+const background =
+  document.getElementById("bg");
 
-const girlVideo = document.getElementById("girlVideo");
-const girlVideoWrap = document.getElementById("girlVideoWrap");
-const girlStatus = document.getElementById("girlStatus");
-const girlDownload = document.getElementById("girlDownload");
+const coupleGrid =
+  document.getElementById("coupleGrid");
 
-const specialPlayer = document.getElementById("specialPlayer");
-const specialDownload = document.getElementById("specialDownload");
-
-const coupleGrid = document.getElementById("coupleGrid");
-const backTopButton = document.getElementById("backTopBtn");
+const backTopButton =
+  document.getElementById("backTopBtn");
 
 
 /* =========================================================
-   SUPABASE DATA
+   IMAGE PATH
    ========================================================= */
 
-let HER_PHOTOS = [];
-let MY_PHOTOS = [];
-let COUPLE_PHOTOS = [];
+const IMAGE_PATH = "assets/images/";
 
-let GIRL_VIDEOS = [];
-let SPECIAL_VIDEO = "";
 
-let VOICE_FILES = [];
+/* =========================================================
+   HER PHOTOS
+   ========================================================= */
 
-let currentGirlVideo = 0;
+const HER_PHOTOS = [
+  "her (1).jpg",
+  "her (2).jpg",
+  "her (3).jpg",
+  "her (4).jpg",
+  "her (5).jpg",
+  "her (6).jpg",
+  "her (7).jpg",
+  "her (8).jpg",
+  "her (9).jpg",
+  "her (10).jpg",
+  "her (11).jpg",
+  "her (12).jpg",
+  "her (13).jpg",
+  "her (14).jpg",
+  "her (15).jpg",
+  "her (16).jpg",
+  "her (17).jpg"
+].map(
+  file => IMAGE_PATH + file
+);
+
+
+/* =========================================================
+   MY PHOTOS
+   ========================================================= */
+
+const MY_PHOTOS = [
+  "my (1).jpg",
+  "my (2).jpg",
+  "my (3).jpg",
+  "my (4).jpg",
+  "my (5).jpg",
+  "my (6).jpg",
+  "my (7).jpg",
+  "my (8).jpg",
+  "my (9).jpg",
+  "my (10).jpg",
+  "my (11).jpg",
+  "my (12).jpg",
+  "my (13).jpg",
+  "my (14).jpg",
+  "my (15).jpg",
+  "my (16).png"
+].map(
+  file => IMAGE_PATH + file
+);
+
+
+/* =========================================================
+   COUPLE PHOTO
+   ========================================================= */
+
+const COUPLE_PHOTOS = [
+  IMAGE_PATH + "couple (1).jpg"
+];
 
 
 /* =========================================================
@@ -74,302 +121,11 @@ const PARTICLE_SYMBOLS = [
 
 
 /* =========================================================
-   LETTER
+   LETTER TEXT
    ========================================================= */
 
 const LETTER_TYPING_TEXT =
   "তুমি আমার জীবনের এমন একজন মানুষ, যাকে ভুলে যাওয়া আমার কাছে নিজের একটা অংশকে ভুলে যাওয়ার মতো। তোমাকে পেয়ে আমি সত্যিই কৃতজ্ঞ।";
-
-
-/* =========================================================
-   SUPABASE STORAGE HELPERS
-   ========================================================= */
-
-function getPublicUrl(path) {
-
-  if (!supabaseClient) {
-    console.error("Supabase client পাওয়া যায়নি।");
-    return "";
-  }
-
-  const { data } =
-    supabaseClient
-      .storage
-      .from(MEDIA_BUCKET)
-      .getPublicUrl(path);
-
-  return data?.publicUrl || "";
-}
-
-
-/* =========================================================
-   LOAD FILES FROM SUPABASE
-   ========================================================= */
-
-async function getStorageFiles(folder) {
-
-  try {
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .storage
-        .from(MEDIA_BUCKET)
-        .list(folder, {
-          limit: 100,
-          offset: 0,
-          sortBy: {
-            column: "created_at",
-            order: "asc"
-          }
-        });
-
-    if (error) {
-
-      console.error(
-        `Supabase ${folder} error:`,
-        error
-      );
-
-      return [];
-
-    }
-
-    if (!data) return [];
-
-    return data
-      .filter(file => file.name)
-      .map(file => {
-
-        const path =
-          `${folder}/${file.name}`;
-
-        return {
-          name: file.name,
-          path: path,
-          url: getPublicUrl(path)
-        };
-
-      });
-
-  } catch (error) {
-
-    console.error(
-      `Could not load ${folder}:`,
-      error
-    );
-
-    return [];
-
-  }
-
-}
-
-
-/* =========================================================
-   LOAD ALL MEDIA
-   ========================================================= */
-
-async function loadAllMedia() {
-
-  console.log("🔄 Loading media from Supabase...");
-
-
-  const [
-    images,
-    videos,
-    voice,
-    couple
-  ] =
-    await Promise.all([
-      getStorageFiles("images"),
-      getStorageFiles("videos"),
-      getStorageFiles("voice"),
-      getStorageFiles("couple")
-    ]);
-
-
-  /*
-    সব uploaded image
-  */
-
-  const imageUrls =
-    images.map(file => file.url);
-
-
-  /*
-    এখন images folder-এর প্রথমগুলো
-    Her Photos হিসেবে ব্যবহার হবে।
-
-    চাইলে filename দিয়ে আলাদা করা যাবে।
-  */
-
-  HER_PHOTOS = imageUrls;
-
-
-  /*
-    আপাতত একই images folder-এর ছবি
-    My Photos-এর জন্য আলাদা করে ব্যবহার
-    করা হচ্ছে না।
-  */
-
-  MY_PHOTOS = [];
-
-
-  /*
-    Couple folder
-  */
-
-  COUPLE_PHOTOS =
-    couple.map(file => file.url);
-
-
-  /*
-    Videos
-  */
-
-  GIRL_VIDEOS =
-    videos.map(file => file.url);
-
-
-  /*
-    Voice
-  */
-
-  VOICE_FILES = voice;
-
-
-  /*
-    Special video:
-    যদি videos folder-এ "special" নামের
-    video থাকে, সেটা special video হবে।
-  */
-
-  const specialFile =
-    videos.find(file =>
-      file.name
-        .toLowerCase()
-        .startsWith("special.")
-    );
-
-
-  if (specialFile) {
-
-    SPECIAL_VIDEO =
-      specialFile.url;
-
-  } else {
-
-    SPECIAL_VIDEO = "";
-
-  }
-
-
-  console.log(
-    "✅ Supabase media loaded:",
-    {
-      images: HER_PHOTOS.length,
-      videos: GIRL_VIDEOS.length,
-      voice: VOICE_FILES.length,
-      couple: COUPLE_PHOTOS.length
-    }
-  );
-
-
-  /*
-    এখন sections initialize করব।
-  */
-
-  setupMediaSections();
-
-}
-
-
-/* =========================================================
-   SETUP MEDIA SECTIONS
-   ========================================================= */
-
-function setupMediaSections() {
-
-
-  /* -------------------------
-     HER PHOTOS
-     ------------------------- */
-
-  createSlideshow({
-
-    imageElement:
-      document.getElementById("herImg"),
-
-    dotsElement:
-      document.getElementById("herDots"),
-
-    countElement:
-      document.getElementById("herCount"),
-
-    images:
-      HER_PHOTOS,
-
-    interval:
-      4500
-
-  });
-
-
-  /* -------------------------
-     MY PHOTOS
-     ------------------------- */
-
-  createSlideshow({
-
-    imageElement:
-      document.getElementById("myImg"),
-
-    dotsElement:
-      document.getElementById("myDots"),
-
-    countElement:
-      document.getElementById("myCount"),
-
-    images:
-      MY_PHOTOS,
-
-    interval:
-      4500
-
-  });
-
-
-  /* -------------------------
-     COUPLE
-     ------------------------- */
-
-  loadCouplePhotos();
-
-
-  /* -------------------------
-     GIRL VIDEOS
-     ------------------------- */
-
-  setupGirlVideos();
-
-
-  /* -------------------------
-     SPECIAL VIDEO
-     ------------------------- */
-
-  setupSpecialVideo();
-
-
-  /* -------------------------
-     VOICE
-     ------------------------- */
-
-  setupVoice();
-
-}
 
 
 /* =========================================================
@@ -389,18 +145,20 @@ if (goButton) {
 
       giftOpened = true;
 
+
       if (openScreen) {
 
-        openScreen.style.display =
-          "none";
+        openScreen.style.display = "none";
 
       }
+
 
       if (exp) {
 
         exp.classList.add("show");
 
       }
+
 
       startTyping();
 
@@ -461,10 +219,12 @@ function startTyping() {
 
     }
 
+
     typingElement.textContent +=
       LETTER_TYPING_TEXT[index];
 
     index++;
+
 
     setTimeout(
       type,
@@ -570,9 +330,7 @@ captionCards.forEach(card => {
     "click",
     () => {
 
-      card.classList.toggle(
-        "open"
-      );
+      card.classList.toggle("open");
 
     }
   );
@@ -610,11 +368,11 @@ function createSpark() {
 
   if (!background) return;
 
+
   const spark =
     document.createElement("div");
 
-  spark.className =
-    "spark";
+  spark.className = "spark";
 
 
   spark.style.left =
@@ -637,6 +395,7 @@ function createSpark() {
 function createParticle() {
 
   if (!background) return;
+
 
   const particle =
     document.createElement("div");
@@ -672,7 +431,7 @@ function createParticle() {
 
 
   particle.style.color =
-    Math.random() > .5
+    Math.random() > 0.5
       ? "#ffabc9"
       : "#d8b5ff";
 
@@ -719,7 +478,7 @@ function createHeartBurst(
 
 
     heart.textContent =
-      Math.random() > .5
+      Math.random() > 0.5
         ? "♥"
         : "♡";
 
@@ -826,7 +585,7 @@ function createSlideshow({
   dotsElement,
   countElement,
   images,
-  interval = 4200
+  interval = 4500
 }) {
 
   if (
@@ -852,7 +611,7 @@ function createSlideshow({
     if (countElement) {
 
       countElement.textContent =
-        "No photos uploaded yet";
+        "No photos";
 
     }
 
@@ -879,8 +638,7 @@ function createSlideshow({
         );
 
 
-      dot.className =
-        "dot";
+      dot.className = "dot";
 
 
       if (index === 0) {
@@ -1015,7 +773,7 @@ function loadCouplePhotos() {
     coupleGrid.innerHTML =
       `
       <p style="color:#cfa9bd">
-        কোনো couple photo এখনো যোগ করা হয়নি।
+        কোনো couple photo পাওয়া যায়নি।
       </p>
       `;
 
@@ -1065,351 +823,68 @@ function loadCouplePhotos() {
 
 
 /* =========================================================
-   GIRL VIDEOS
+   INITIALIZE SLIDESHOWS
    ========================================================= */
 
-function setupGirlVideos() {
+createSlideshow({
 
-  if (!girlVideo) return;
+  imageElement:
+    document.getElementById("herImg"),
 
+  dotsElement:
+    document.getElementById("herDots"),
 
-  if (
-    !GIRL_VIDEOS ||
-    GIRL_VIDEOS.length === 0
-  ) {
+  countElement:
+    document.getElementById("herCount"),
 
-    if (girlStatus) {
+  images:
+    HER_PHOTOS,
 
-      girlStatus.textContent =
-        "🎬 এখনো কোনো ভিডিও upload করা হয়নি।";
+  interval:
+    4500
 
-    }
-
-
-    return;
-
-  }
+});
 
 
-  loadGirlVideo(
-    0,
-    false
-  );
+createSlideshow({
 
-}
+  imageElement:
+    document.getElementById("myImg"),
 
+  dotsElement:
+    document.getElementById("myDots"),
 
-function loadGirlVideo(
-  index,
-  autoplay = false
-) {
+  countElement:
+    document.getElementById("myCount"),
 
-  if (
-    index < 0 ||
-    index >= GIRL_VIDEOS.length
-  ) {
+  images:
+    MY_PHOTOS,
 
-    return;
+  interval:
+    4500
 
-  }
+});
 
 
-  currentGirlVideo =
-    index;
-
-
-  const src =
-    GIRL_VIDEOS[index];
-
-
-  girlVideo.src =
-    src;
-
-
-  girlVideo.load();
-
-
-  if (girlDownload) {
-
-    girlDownload.href =
-      src;
-
-    girlDownload.download =
-      getFileName(src);
-
-  }
-
-
-  if (girlStatus) {
-
-    girlStatus.textContent =
-      `🎬 Video ${index + 1} / ${GIRL_VIDEOS.length}`;
-
-  }
-
-
-  if (autoplay) {
-
-    const playPromise =
-      girlVideo.play();
-
-
-    if (
-      playPromise &&
-      typeof playPromise.catch ===
-        "function"
-    ) {
-
-      playPromise.catch(
-        () => {}
-      );
-
-    }
-
-  }
-
-}
+loadCouplePhotos();
 
 
 /* =========================================================
-   GIRL VIDEO EVENTS
+   BACK TO TOP
    ========================================================= */
 
-if (girlVideo) {
+if (backTopButton) {
 
-  girlVideo.addEventListener(
-    "ended",
+  backTopButton.addEventListener(
+    "click",
     () => {
 
-      if (
-        currentGirlVideo <
-        GIRL_VIDEOS.length - 1
-      ) {
-
-        loadGirlVideo(
-          currentGirlVideo + 1,
-          true
-        );
-
-      } else {
-
-        if (girlStatus) {
-
-          girlStatus.textContent =
-            "❤️ সব ভিডিও দেখা শেষ";
-
-        }
-
-      }
-
-    }
-  );
-
-
-  girlVideo.addEventListener(
-    "play",
-    () => {
-
-      girlVideoWrap?.classList.add(
-        "playing"
-      );
-
-
-      if (girlStatus) {
-
-        girlStatus.textContent =
-          `▶️ Playing ${currentGirlVideo + 1} / ${GIRL_VIDEOS.length}`;
-
-      }
-
-    }
-  );
-
-
-  girlVideo.addEventListener(
-    "pause",
-    () => {
-
-      girlVideoWrap?.classList.remove(
-        "playing"
-      );
-
-    }
-  );
-
-
-  girlVideo.addEventListener(
-    "error",
-    () => {
-
-      if (girlStatus) {
-
-        girlStatus.textContent =
-          "⚠️ Video load করা যায়নি।";
-
-      }
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
 
     }
   );
 
 }
-
-
-/* =========================================================
-   SPECIAL VIDEO
-   ========================================================= */
-
-function setupSpecialVideo() {
-
-  if (!specialPlayer) return;
-
-
-  if (!SPECIAL_VIDEO) {
-
-    specialPlayer.removeAttribute(
-      "src"
-    );
-
-
-    const box =
-      specialPlayer.closest(
-        ".special-box"
-      );
-
-
-    const status =
-      box?.querySelector(
-        ".video-status"
-      );
-
-
-    if (status) {
-
-      status.textContent =
-        "❤️ Special video এখনো upload করা হয়নি।";
-
-    }
-
-
-    return;
-
-  }
-
-
-  specialPlayer.src =
-    SPECIAL_VIDEO;
-
-
-  specialPlayer.load();
-
-
-  if (specialDownload) {
-
-    specialDownload.href =
-      SPECIAL_VIDEO;
-
-    specialDownload.download =
-      getFileName(
-        SPECIAL_VIDEO
-      );
-
-  }
-
-}
-
-
-/* =========================================================
-   SPECIAL VIDEO ERROR
-   ========================================================= */
-
-if (specialPlayer) {
-
-  specialPlayer.addEventListener(
-    "error",
-    () => {
-
-      const parent =
-        specialPlayer.closest(
-          ".special-box"
-        );
-
-
-      const status =
-        parent?.querySelector(
-          ".video-status"
-        );
-
-
-      if (status) {
-
-        status.textContent =
-          "⚠️ Special video পাওয়া যাচ্ছে না।";
-
-      }
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   VOICE MESSAGE
-   ========================================================= */
-
-function setupVoice() {
-
-  const voiceBox =
-    document.querySelector(
-      ".voice-box"
-    );
-
-
-  if (!voiceBox) return;
-
-
-  /*
-    আগের placeholder text সরিয়ে
-    Supabase audio player বসানো হবে।
-  */
-
-  const oldAudio =
-    voiceBox.querySelector(
-      ".supabase-voice-player"
-    );
-
-
-  if (oldAudio) {
-
-    oldAudio.remove();
-
-  }
-
-
-  if (
-    !VOICE_FILES ||
-    VOICE_FILES.length === 0
-  ) {
-
-    return;
-
-  }
-
-
-  const voiceContainer =
-    document.createElement(
-      "div"
-    );
-
-
-  voiceContainer.className =
-    "supabase-voice-player";
-
-
-  voiceContainer.style.cssText = `
-    width:100%;
-    margin-top:20px;
-    padding:15px;
-    border-radius:18px;
-    background:rgba(255,255,255,.06);
-    border:1px solid r
